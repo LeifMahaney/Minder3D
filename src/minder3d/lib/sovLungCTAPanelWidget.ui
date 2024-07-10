@@ -7,38 +7,49 @@
     <x>0</x>
     <y>0</y>
     <width>390</width>
-    <height>125</height>
+    <height>190</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="QPushButton" name="lungStep1Button">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>30</y>
-     <width>261</width>
-     <height>24</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>1) Lung Vessel and Airway Segmentation AI</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="lungStep2Button">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>70</y>
-     <width>261</width>
-     <height>24</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>2) Vessel and Airway Segmentations to Models</string>
-   </property>
-  </widget>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QPushButton" name="categoryStep3Button">
+     <property name="text">
+      <string>Fracture</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="categoryStep1Button">
+     <property name="text">
+      <string>Cancer Survival</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="categoryStep4Button">
+     <property name="text">
+      <string>Organ</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="categoryStep2Button">
+     <property name="text">
+      <string>Cardiac</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="categoryStep5Button">
+     <property name="text">
+      <string>Dementia/Brain</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
  </widget>
  <resources/>
  <connections/>

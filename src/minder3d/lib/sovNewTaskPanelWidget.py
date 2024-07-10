@@ -1,7 +1,7 @@
 from PySide6.QtWidgets import QWidget
 
 from .sovImageProcessPanelWidget import ImageProcessPanelWidget
-from .sovLungCTAPanelWidget import LungCTAPanelWidget
+from .sovLungCTAPanelWidget import LungCTAPanelWidget, body_parts, cancer_survival_statistical_data, cardiac_statistical_data, fracture_statistical_data, organ_statistical_data, tasks
 from .sovOtsuPanelWidget import OtsuPanelWidget
 from .sovUtils import time_and_log
 from .ui_sovNewTaskPanelWidget import Ui_NewTaskPanelWidget
@@ -23,14 +23,14 @@ class NewTaskPanelWidget(QWidget, Ui_NewTaskPanelWidget):
         self.gui = gui
         self.state = state
 
-        self.newTaskLungCTAButton.clicked.connect(self.add_lung_cta_panel)
+        self.newTaskLungCTAButton.clicked.connect(lambda: self.add_lung_cta_panel(body_parts, cancer_survival_statistical_data, cardiac_statistical_data, fracture_statistical_data, organ_statistical_data, tasks))
         self.newTaskOtsuButton.clicked.connect(self.add_otsu_panel)
         self.newTaskImageProcessButton.clicked.connect(
             self.add_image_process_panel
         )
 
     @time_and_log
-    def add_lung_cta_panel(self):
+    def add_lung_cta_panel(self, body_parts, cancer_survival_statistical_data, cardiac_statistical_data, fracture_statistical_data, organ_statistical_data, tasks):
         """Add the Lung CTA panel to the GUI tab widget if it is not already added.
 
         If the Lung CTA panel is not already created, it creates a new instance of LungCTAPanelWidget and adds it to the tab widget.
@@ -41,7 +41,7 @@ class NewTaskPanelWidget(QWidget, Ui_NewTaskPanelWidget):
         """
 
         if self.gui.lungCTAPanel is None:
-            self.gui.lungCTAPanel = LungCTAPanelWidget(self.gui, self.state)
+            self.gui.lungCTAPanel = LungCTAPanelWidget(self.gui, self.state, body_parts, cancer_survival_statistical_data, cardiac_statistical_data, fracture_statistical_data, organ_statistical_data, tasks)
         if self.gui.tabWidget.indexOf(self.gui.lungCTAPanel) == -1:
             indx = self.gui.tabWidget.indexOf(self.gui.newTaskTab)
             self.gui.tabWidget.insertTab(

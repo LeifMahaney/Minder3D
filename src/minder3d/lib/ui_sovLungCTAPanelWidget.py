@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'sovLungCTAPanelWidgetrCKdJr.ui'
+## Form generated from reading UI file 'sovLungCTAPanelWidgetsKvKMC.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.5.0
 ##
@@ -28,6 +28,9 @@ class Ui_LungCTAPanelWidget(object):
         self.lungStep2Button = QPushButton(LungCTAPanelWidget)
         self.lungStep2Button.setObjectName(u"lungStep2Button")
         self.lungStep2Button.setGeometry(QRect(10, 70, 261, 24))
+        self.SovLungTest = QPushButton(LungCTAPanelWidget)
+        self.SovLungTest.setObjectName(u"SovLungTest")
+        self.SovLungTest.setGeometry(QRect(300, 50, 75, 24))
 
         self.retranslateUi(LungCTAPanelWidget)
 
@@ -38,5 +41,6 @@ class Ui_LungCTAPanelWidget(object):
         LungCTAPanelWidget.setWindowTitle(QCoreApplication.translate("LungCTAPanelWidget", u"Form", None))
         self.lungStep1Button.setText(QCoreApplication.translate("LungCTAPanelWidget", u"1) Lung Vessel and Airway Segmentation AI", None))
         self.lungStep2Button.setText(QCoreApplication.translate("LungCTAPanelWidget", u"2) Vessel and Airway Segmentations to Models", None))
+        self.SovLungTest.setText(QCoreApplication.translate("LungCTAPanelWidget", u"test", None))
     # retranslateUi
 
