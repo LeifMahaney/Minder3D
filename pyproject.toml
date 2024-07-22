@@ -8,7 +8,7 @@ description = "Using AI to foster innovation in the exploration of radiological 
 readme = "README.md"
 authors = [{name = "Stephen R. Aylward", email = "stephen@aylward.org"}]
 license = {file = "LICENSE"}
-requires-python = ">=3.11"
+requires-python = ">=3.10"
 classifiers = [
     "License :: OSI Approved :: Apache 2.0",
     "Programming Language :: Python",
@@ -67,7 +67,7 @@ push            = false
 [tool.black]
 line-length = 80
 skip-string-normalization = true
-target_version = ['py311']
+target_version = ['py310']
 include = ["src"]
 force-exclude = '''
 (
