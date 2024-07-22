@@ -7,3 +7,9 @@
 *.mhd
 *.raw
 test*
+<<<<<<< HEAD
+=======
+CH*
+PCD*
+UNC*
+>>>>>>> 3274c0c448ad64f28f68392934fbc92b7d4ae6e1
