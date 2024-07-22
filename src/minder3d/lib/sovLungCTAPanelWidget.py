@@ -12,12 +12,13 @@ organ_statistical_data = ['Volume', 'Texture Analysis']
 
 tasks = ['total', 'lung_vessels', 'cerebral_bleed', 'hip_implant', 'coronary_arteries', 'pleural_pericard_effusion', 'appendicular_bones', 'tissue_types', 'heartchambers_highres', 'face', 'vertebrae_body', 'total_mr', 'tissue_types_mr', 'face_mr']
 
-from PySide6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QPushButton, QLabel, QMessageBox, QComboBox
+from PySide6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QPushButton, QLabel, QMessageBox, QComboBox, QFileDialog
 from PySide6.QtCore import Qt
 import sys
 from .sovLungCTALogic import LungCTALogic
 from .sovUtils import add_objects_in_mask_image_to_scene, time_and_log
 from .ui_sovLungCTAPanelWidget import Ui_LungCTAPanelWidget
+
 
 class LungCTAPanelWidget(QWidget):
     def __init__(self, gui, state, body_parts, cancer_survival_statistical_data, cardiac_statistcal_data, fracture_statistcal_data, organ_statistcal_data, tasks, parent=None):
@@ -38,39 +39,54 @@ class LungCTAPanelWidget(QWidget):
         self.init_ui()
 
     def calculate_statistics(self):
+            options = QFileDialog.Options()
+            options |= QFileDialog.DontUseNativeDialog
+            file_path, _ = QFileDialog.getSaveFileName(self, 'Save calculation as', '', 'Text Files (*.txt);;All Files (*)', options=options)
+            if not file_path:
+                QMessageBox.warning(self, 'No file selected', 'Please select a file you would like to use')
+            
+            statistics = []
             category = self.selected_category
             body_part = self.body_part_combobox.currentText()
             target_statistic = self.target_body_part_combobox.currentText()
             self.calculate_button.setVisible(True)
-
-            if self.selected_category == 'Cancer Survival':
+            
+            if self.selected_category == 'Cancer Survival' and body_part == 'Psoas muscle at L3':
                 if target_statistic == "Volume":
-                    volume = self.logic.calculate_volume(self.seg_image)
-                    QMessageBox.information(self, 'Volume Calculation', f'volume: {volume:.2f}')
+                    volume_left = self.logic.calculate_volume(self.seg_image, 88)
+                    volume_right = self.logic.calculate_volume(self.seg_image, 89)
+                    statistics.append(f'Volume of iliopsoas Left: {volume_left:.2f}')
+                    statistics.append(f'Volume of iliopsoas Right: {volume_right:.2f}')
                 elif target_statistic == "Two Volumes":
-                    volume1, volume2 = self.logic.calculate_two_volumes(self.seg_image)
-                    QMessageBox.information(self, 'Volume Calculations', f'Volumes: {volume1: .2f} and {volume2: .2f}')
+                    volume1, volume2 = self.logic.calculate_two_volumes(self.seg_image, 88, 89)
+                    statistics.append(self, 'Volume Calculations', f'Volumes: {volume1: .2f} and {volume2: .2f}')
             if self.selected_category == 'Cardiac':
                 if target_statistic == "Two Volumes":
-                    volume1, volume2 = self.logic.calculate_two_volumes(self.seg_image)
-                    QMessageBox.information(self, 'Volume Calculations', f'Volumes: {volume1: .2f} and {volume2: .2f}')
+                    volume1, volume2 = self.logic.calculate_two_volumes(self.seg_image, 'visceral_fat', 'subcutaneous_fat')
+                    statistics.append(self, 'Volume Calculations', f'Volumes: {volume1: .2f} and {volume2: .2f}')
                 elif target_statistic == "Agaston or Equivalent Calcium Score":
                     calcium_score = self.logic.calculate_calcium_score(self.seg_image)
-                    QMessageBox.information(self, 'Calcium Score', f'Calcium Score: {calcium_score: .2f}')
+                    statistics.append(self, 'Calcium Score', f'Calcium Score: {calcium_score: .2f}')
             if self.selected_category == 'Fracture':
                 if target_statistic == 'Bone Mineral Density':
-                    bmd = self.logic.calculate_bmd(self.seg_image)
-                    QMessageBox.information(self, 'Bone Mineral Density', f'Bone Mineral Density: {bmd: .2f}')
+                    bmd, texture_features = self.logic.calculate_bmd(self.seg_image, body_part)
+                    statistics.append(f'Bone Mineral Density of {body_part} is: {bmd: .2f}')
                 elif target_statistic == 'Texture Analysis':
                     texture_features = self.logic.calculate_texture_analysis(self.seg_image)
-                    QMessageBox.information(self, 'Texture Analysis', f'Texture Analysis: {texture_features}')
+                    statistics.append(self, 'Texture Analysis', f'Texture Analysis: {texture_features}')
             if self.selected_category == 'Organ':
                 if target_statistic == "Volume":
-                    volume = self.logic.calculate_volume(self.seg_image)
-                    QMessageBox.information(self, 'Volume Calculation', f'volume: {volume:.2f}')
+                    volume = self.logic.calculate_volume(self.seg_image, body_parts)
+                    statistics.append(self, 'Volume Calculation', f'volume: {volume:.2f}')
                 elif target_statistic == 'Texture Analysis':
                     texture_features = self.logic.calculate_texture_analysis(self.seg_image)
-                    QMessageBox.information(self, 'Texture Analysis', f'Texture Analysis: {texture_features}')
+                    statistics.append(self, 'Texture Analysis', f'Texture Analysis: {texture_features}')
+
+            with open(file_path, 'w') as file:
+                for calculation in statistics:
+                    file.write(calculation + '/n')
+
+            QMessageBox.information(self, 'Calculations have been saved', f'Calulations have been saved to {file_path}')
 
 
     @time_and_log   

@@ -138,29 +138,52 @@ class LungCTALogic:
         if self.voxel_volume is None:
             raise ValueError('Initialize Voxel Volume')
         return self.voxel_volume
+
+    def number_of_voxels(self, segmented_image, label, min_voxels = 5):
+        array = itk.GetArrayFromImage(segmented_image)
+        num_voxels = np.sum(array == label)
+        return num_voxels >= min_voxels
     
     # Calculates the volume by multiplying the number of voxels by the voxel volume
-    def calculate_volume(self, segmented_image):
+    def calculate_volume(self, segmented_image, label_name,):
+        label = label_mapping[label_name]
+        l3_label = label_mapping[29]
+        
+        l3_array = itk.GetArrayFromImage(segmented_image) == l3_label
+        psoas_array = itk.GetArrayFromImage(segmented_image) == label
+        sufficient_slices = np.sum(l3_array, axis=(1,2)) >= 5
+        psoas_array = psoas_array[sufficient_slices]
+
         voxel_volume = self.get_voxel_volume()
-        num_voxels = np.sum(itk.GetArrayFromImage(segmented_image))
+        num_voxels = np.sum(psoas_array)
         volume = num_voxels * voxel_volume 
         return volume
     
     # This does the same thing as calculate_volume however it calculates two volumes using two different regions and multiplying them both by the same voxel_volume
-    def calculate_two_volumes(self, segmented_image):
-        region1, region2 = self.split_into_two_regions(segmented_image)
+    def calculate_two_volumes(self, segmented_image, label_name1, label_name2):
+        label1 = label_mapping[label_name1]
+        label2 = label_mapping[label_name2]
+        l3_label = label_mapping[29]
+
+        l3_array = itk.GetArrayFromImage(segmented_image) == l3_label
+        region1_array = itk.GetArrayFromImage(segmented_image) == label1 
+        region2_array = itk.GetArrayFromImage(segmented_image) == label2
+        sufficient_slices = np.sum(l3_array, axis=(1,2)) >= 5
+        region1_array = region1_array[sufficient_slices]
+        region2_array = region2_array[sufficient_slices]
+
         voxel_volume = self.get_voxel_volume()
-        num_voxels1 = np.sum(itk.GetArrayFromImage(region1))
-        num_voxels2 = np.sum(itk.GetArrayFromImage(region2))
+        num_voxels1 = np.sum(region1_array)
+        num_voxels2 = np.sum(region2_array)
         volume1 = num_voxels1 * voxel_volume
         volume2 = num_voxels2 * voxel_volume
         return volume1, volume2
 
     # Seperates the image into two regions based on specific parameters which include 
-    def split_into_two_regions(self, segmented_image):
+    def split_into_two_regions(self, segmented_image, label1, label2):
         array = itk.GetArrayFromImage(segmented_image)
-        region1 = array == 1
-        region2 = array == 2
+        region1 = array == label1
+        region2 = array == label2
         region1_img = itk.GetImageFromArray(region1.astype(np.uint8))
         region2_img = itk.GetImageFromArray(region2.astype(np.uint8))
         region1_img.CopyInformation(segmented_image)
@@ -173,10 +196,13 @@ class LungCTALogic:
         return calcium_score
     
     # Average of the voxel values in the segmented image
-    def calculate_bmd(self, segmented_image):
-        bmd = np.mean(itk.GetArrayFromImage(segmented_image))
+    def calculate_bmd(self, segmented_image, label_name):
+        label = label_mapping[label_name]
+        array = itk.GetArrayFromImage(segmented_image)
+        bone_region = array == label
+        bmd = np.mean(array[bone_region])
         return bmd
-    
+
     
     @time_and_log
     def initialize(self, image):
