@@ -1,7 +1,7 @@
-import numpy as np
 from PySide6.QtWidgets import QWidget
-from vtk import vtkRenderLargeImage
-from vtk.util.numpy_support import vtk_to_numpy
+
+# from vtk import vtkRenderLargeImage
+from vtk import vtkWindowToImageFilter
 
 from .sovUtils import time_and_log
 from .sovView3DRenderWindowInteractor import View3DRenderWindowInteractor
@@ -35,6 +35,7 @@ class View3DPanelWidget(QWidget, Ui_View3DPanelWidget):
         self.vtk3DViewWidget.reset_camera()
 
     def get_screenshot(self):
+        """
         render = vtkRenderLargeImage()
         render.SetMagnification(1)
         render.SetInput(self.vtk3DViewWidget.scene_renderer)
@@ -49,6 +50,17 @@ class View3DPanelWidget(QWidget, Ui_View3DPanelWidget):
         numpy_data = numpy_data.transpose(0, 1, 2)
         numpy_data = np.flipud(numpy_data)
         return numpy_data
+        """
+        screenshotfilter = vtkWindowToImageFilter()
+        screenshotfilter.SetInput(
+            self.vtk3DViewWidget.scene_renderer.GetRenderWindow()
+        )
+        screenshotfilter.SetScale(2)
+        screenshotfilter.SetInputBufferTypeToRGBA()
+        screenshotfilter.ReadFrontBufferOff()
+        screenshotfilter.Update()
+
+        return screenshotfilter.GetOutput()
 
     @time_and_log
     def create_new_image(self):

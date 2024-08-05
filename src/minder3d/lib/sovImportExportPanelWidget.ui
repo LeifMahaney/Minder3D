@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>WelcomePanelWidget</class>
- <widget class="QWidget" name="WelcomePanelWidget">
+ <class>ImportExportPanelWidget</class>
+ <widget class="QWidget" name="ImportExportPanelWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>667</width>
+    <width>484</width>
     <height>153</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="QPushButton" name="welcomeLoadImageButton">
+  <widget class="QPushButton" name="importExportLoadImageButton">
    <property name="geometry">
     <rect>
      <x>20</x>
@@ -26,11 +26,11 @@
     <string>Load Image</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="welcomeImportDICOMButton">
+  <widget class="QPushButton" name="importExportImportDICOMButton">
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>70</y>
+     <y>100</y>
      <width>121</width>
      <height>24</height>
     </rect>
@@ -39,10 +39,10 @@
     <string>Import DICOM Data</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="welcomeSaveImageButton">
+  <widget class="QPushButton" name="importExportSaveImageButton">
    <property name="geometry">
     <rect>
-     <x>300</x>
+     <x>180</x>
      <y>10</y>
      <width>121</width>
      <height>24</height>
@@ -52,11 +52,11 @@
     <string>Save Image</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="welcomeSaveSceneButton">
+  <widget class="QPushButton" name="importExportSaveSceneButton">
    <property name="geometry">
     <rect>
-     <x>160</x>
-     <y>10</y>
+     <x>180</x>
+     <y>40</y>
      <width>121</width>
      <height>24</height>
     </rect>
@@ -65,10 +65,10 @@
     <string>Save Scene</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="welcomeLoadSceneButton">
+  <widget class="QPushButton" name="importExportLoadSceneButton">
    <property name="geometry">
     <rect>
-     <x>160</x>
+     <x>20</x>
      <y>40</y>
      <width>121</width>
      <height>24</height>
@@ -78,11 +78,11 @@
     <string>Load Scene</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="welcomeSaveOverlayButton">
+  <widget class="QPushButton" name="importExportSaveOverlayButton">
    <property name="geometry">
     <rect>
-     <x>440</x>
-     <y>40</y>
+     <x>180</x>
+     <y>70</y>
      <width>121</width>
      <height>24</height>
     </rect>
@@ -91,10 +91,10 @@
     <string>Save Overlay</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="welcomeSaveVTKModelsButton">
+  <widget class="QPushButton" name="importExportSaveVTKModelsButton">
    <property name="geometry">
     <rect>
-     <x>300</x>
+     <x>340</x>
      <y>40</y>
      <width>121</width>
      <height>24</height>
@@ -104,11 +104,11 @@
     <string>Save VTK Models</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="welcomeLoadOverlayButton">
+  <widget class="QPushButton" name="importExportLoadOverlayButton">
    <property name="geometry">
     <rect>
-     <x>440</x>
-     <y>10</y>
+     <x>20</x>
+     <y>70</y>
      <width>121</width>
      <height>24</height>
     </rect>

@@ -18,18 +18,13 @@ class ImportDICOMSettings(QSettings):
     def add_data(self, input_directory, output_directory, auto_register):
         """Add a data settings.
 
-        This function adds a file to the settings, including its filename, type,
-        spacing, size, and thumbnail.
+        This function converts a DICOM directory of files to .nii.gz files.
+        Optionally adds them to the settings database.
 
         Args:
-            obj: The object representing the file.
-            filename (str): The name of the file.
-            file_type (str): The type of the file.
-            thumbnail_pixmap (Optional[QPixmap]): The thumbnail of the file.
-
-
-        Raises:
-            IndexError: If the input list is empty.
+            input_directory (str): The directory containing DICOM data.
+            output_directory (str): The directory for storing the nii.gz files.
+            auto_register (Optional[bool]): Should the created nii.gz files be stored in the settings database.
         """
         self.setValue('input_directory', input_directory)
         self.setValue('output_directory', output_directory)

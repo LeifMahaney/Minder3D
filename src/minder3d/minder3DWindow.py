@@ -31,7 +31,6 @@ from .lib.sovUtils import (
 from .lib.sovView2DPanelWidget import View2DPanelWidget
 from .lib.sovView3DPanelWidget import View3DPanelWidget
 from .lib.sovVisualizationPanelWidget import VisualizationPanelWidget
-from .lib.sovWelcomePanelWidget import WelcomePanelWidget
 from .minder3DState import Minder3DState
 from .ui_minder3DWindow import Ui_MainWindow
 
@@ -89,10 +88,6 @@ class Minder3DWindow(QMainWindow, Ui_MainWindow):
         self.infoTablePanel = InfoTablePanelWidget(self, self.state)
         self.infoTableLayout.addWidget(self.infoTablePanel)
 
-        # Welcome Tab
-        self.welcomePanel = WelcomePanelWidget(self, self.state)
-        self.welcomeTabLayout.addWidget(self.welcomePanel)
-
         # Visualization Tab
         self.visualizationPanel = VisualizationPanelWidget(self, self.state)
         self.visualizationTabLayout.addWidget(self.visualizationPanel)
@@ -106,14 +101,14 @@ class Minder3DWindow(QMainWindow, Ui_MainWindow):
         self.tabWidget.setFixedWidth(700)
 
         self.importDICOMPanel = None
+        self.importExportPanel = None
         self.lungCTAPanel = None
         self.otsuPanel = None
         self.imageProcessPanel = None
 
-        # Remove Close buttons from welcome, visualization, and pre-process
-        # and task tabs
+        # Remove Close buttons from NewTask and Advanced Visualization tabs
         tabBar = self.tabWidget.tabBar()
-        for i in range(0, 3):
+        for i in range(0, 2):
             tabBar.tabButton(i, QTabBar.RightSide).deleteLater()
             tabBar.setTabButton(i, QTabBar.RightSide, None)
 
@@ -352,7 +347,9 @@ class Minder3DWindow(QMainWindow, Ui_MainWindow):
             )
         if filename:
             exporter = vtk.vtkVRMLExporter()
-            exporter.SetRenderWindow(self.view3DPanel.renderWindow)
+            exporter.SetRenderWindow(
+                self.view3DPanel.vtk3DViewWidget.GetRenderWindow()
+            )
             exporter.SetFileName(filename)
             exporter.Write()
             exporter.Update()
@@ -379,7 +376,6 @@ class Minder3DWindow(QMainWindow, Ui_MainWindow):
             self.state.scene_filename = os.path.abspath(filename)
             self.log(f'Saving scene to {filename}')
             new_scene = compress_scene_for_saving(self.state.scene)
-            print(new_scene)
             write_group(new_scene, filename)
             self.imageTablePanel.save_scene(filename)
 
@@ -589,6 +585,7 @@ class Minder3DWindow(QMainWindow, Ui_MainWindow):
         self.state.image_max.pop(img_num)
         self.state.image_filename.pop(img_num)
         self.state.image_thumbnail.pop(img_num)
+        self.state.image_label.pop(img_num)
         self.state.csa_to_image_axis.pop(img_num)
 
         self.state.overlay.pop(img_num)
@@ -607,6 +604,35 @@ class Minder3DWindow(QMainWindow, Ui_MainWindow):
             self.state.current_image_num = -1
 
         if update_image_table:
-            self.imageTablePanel.unload_image()
+            self.imageTablePanel.fill_table()
 
         self.view2DPanel.update_view_image_num(self.state.current_image_num)
+
+    @time_and_log
+    def unload_scene(self, update_image_table=True):
+        """
+        This function deletes the all objects from the scene
+        """
+        for scene_idx in range(len(self.state.scene_list)):
+            so_id = self.state.scene_list_ids[scene_idx]
+            if so_id == -1:
+                continue
+            so = self.state.scene_list[scene_idx]
+            so_parent = so.GetParent()
+            so_parent.RemoveChild(so)
+            self.state.scene_list.pop(scene_idx)
+            self.state.scene_list_properties.pop(scene_idx)
+        self.state.selected_ids = []
+        self.state.selected_point_ids = []
+        self.state.scene_filename = ''
+        self.state.scene_thumbnail = None
+        self.state.scene_label = ''
+
+        self.state.scene_list = []
+        self.state.scene_list_ids = []
+        self.state.scene_list_properties = []
+
+        if update_image_table:
+            self.imageTablePanel.fill_table()
+
+        self.update_scene()

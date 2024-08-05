@@ -12,3 +12,4 @@ itk-wheels
 *.mha
 *.nii
 *.code-workspace
+.vscode

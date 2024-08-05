@@ -28,6 +28,7 @@ class Minder3DState:
         self.image_max = []
         self.image_filename = []
         self.image_thumbnail = []
+        self.image_label = []
         self.csa_to_image_axis = []
 
         # Overlay
@@ -63,6 +64,7 @@ class Minder3DState:
         self.scene_list_properties = dict()
         self.scene_filename = './scene.tre'
         self.scene_thumbnail = None
+        self.scene_label = None
 
         # Selected Spatial Objects
         self.multiple_selections_enabled = False

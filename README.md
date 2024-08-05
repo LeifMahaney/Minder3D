@@ -31,7 +31,7 @@ For windows running gitbash
 
 Install the test-build of ITK, ITKMinimalPathExtraction ITKTubetk:
 
-    python -m pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ itk itk-minimalpathextraction itk-tubetk
+    python -m pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ --upgrade itk itk-minimalpathextraction itk-tubetk
 
 Get the Minder3D source code
 

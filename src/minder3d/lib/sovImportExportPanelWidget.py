@@ -2,10 +2,10 @@ from PySide6.QtWidgets import QWidget
 
 from .sovImportDICOMPanelWidget import ImportDICOMPanelWidget
 from .sovUtils import time_and_log
-from .ui_sovWelcomePanelWidget import Ui_WelcomePanelWidget
+from .ui_sovImportExportPanelWidget import Ui_ImportExportPanelWidget
 
 
-class WelcomePanelWidget(QWidget, Ui_WelcomePanelWidget):
+class ImportExportPanelWidget(QWidget, Ui_ImportExportPanelWidget):
     @time_and_log
     def __init__(self, gui, state, parent=None):
         """Initialize the GUI and state for the application.
@@ -21,19 +21,25 @@ class WelcomePanelWidget(QWidget, Ui_WelcomePanelWidget):
         self.gui = gui
         self.state = state
 
-        self.welcomeLoadImageButton.pressed.connect(self.gui.load_image)
-        self.welcomeLoadImageButton.setStyleSheet('background-color: #00aa00')
-        self.welcomeLoadOverlayButton.pressed.connect(self.gui.load_overlay)
-        self.welcomeLoadSceneButton.pressed.connect(self.gui.load_scene)
-        self.welcomeImportDICOMButton.pressed.connect(
+        self.importExportLoadImageButton.pressed.connect(self.gui.load_image)
+        self.importExportLoadImageButton.setStyleSheet(
+            'background-color: #00aa00'
+        )
+        self.importExportLoadOverlayButton.pressed.connect(
+            self.gui.load_overlay
+        )
+        self.importExportLoadSceneButton.pressed.connect(self.gui.load_scene)
+        self.importExportImportDICOMButton.pressed.connect(
             self.add_import_DICOM_panel
         )
-        self.welcomeSaveImageButton.pressed.connect(self.gui.save_image)
-        self.welcomeSaveOverlayButton.pressed.connect(self.gui.save_overlay)
-        self.welcomeSaveVTKModelsButton.pressed.connect(
+        self.importExportSaveImageButton.pressed.connect(self.gui.save_image)
+        self.importExportSaveOverlayButton.pressed.connect(
+            self.gui.save_overlay
+        )
+        self.importExportSaveVTKModelsButton.pressed.connect(
             self.gui.save_vtk_models
         )
-        self.welcomeSaveSceneButton.pressed.connect(self.gui.save_scene)
+        self.importExportSaveSceneButton.pressed.connect(self.gui.save_scene)
 
     @time_and_log
     def add_import_DICOM_panel(self):

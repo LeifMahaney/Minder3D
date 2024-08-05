@@ -41,6 +41,14 @@ class InfoTablePanelWidget(QWidget, Ui_InfoTablePanelWidget):
         self.infoTableWidget.setItem(
             0, 0, QTableWidgetItem('Image Information')
         )
+
+        if (
+            self.state.current_image_num == -1
+            or self.state.image is None
+            or len(self.state.image) == 0
+        ):
+            return
+
         img = self.state.image[self.state.current_image_num]
 
         self.infoTableWidget.setItem(1, 0, QTableWidgetItem('  Image Size'))

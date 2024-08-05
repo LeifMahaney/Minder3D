@@ -153,28 +153,22 @@
              </size>
             </property>
             <property name="currentIndex">
-             <number>2</number>
+             <number>0</number>
             </property>
             <property name="tabsClosable">
              <bool>true</bool>
             </property>
-            <widget class="QWidget" name="welcomeTab">
+            <widget class="QWidget" name="newTaskTab">
              <attribute name="title">
-              <string>Load / Save Data</string>
+              <string>New Task</string>
              </attribute>
-             <layout class="QHBoxLayout" name="welcomeTabLayout"/>
+             <layout class="QHBoxLayout" name="newTaskTabLayout"/>
             </widget>
             <widget class="QWidget" name="visualizationTab">
              <attribute name="title">
               <string>Advanced Visualization</string>
              </attribute>
              <layout class="QHBoxLayout" name="visualizationTabLayout"/>
-            </widget>
-            <widget class="QWidget" name="newTaskTab">
-             <attribute name="title">
-              <string>New Task</string>
-             </attribute>
-             <layout class="QHBoxLayout" name="newTaskTabLayout"/>
             </widget>
            </widget>
           </item>
@@ -291,7 +285,7 @@
      <x>0</x>
      <y>0</y>
      <width>1274</width>
-     <height>22</height>
+     <height>19</height>
     </rect>
    </property>
    <widget class="QMenu" name="fileMenu">

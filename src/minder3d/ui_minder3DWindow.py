@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'minder3DWindownkNdyQ.ui'
+## Form generated from reading UI file 'minder3DWindowxPlUYJ.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.5.0
+## Created by: Qt User Interface Compiler version 6.2.4
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -119,21 +119,16 @@ class Ui_MainWindow(object):
         self.tabWidget.setSizePolicy(sizePolicy1)
         self.tabWidget.setMinimumSize(QSize(830, 194))
         self.tabWidget.setTabsClosable(True)
-        self.welcomeTab = QWidget()
-        self.welcomeTab.setObjectName(u"welcomeTab")
-        self.welcomeTabLayout = QHBoxLayout(self.welcomeTab)
-        self.welcomeTabLayout.setObjectName(u"welcomeTabLayout")
-        self.tabWidget.addTab(self.welcomeTab, "")
-        self.visualizationTab = QWidget()
-        self.visualizationTab.setObjectName(u"visualizationTab")
-        self.visualizationTabLayout = QHBoxLayout(self.visualizationTab)
-        self.visualizationTabLayout.setObjectName(u"visualizationTabLayout")
-        self.tabWidget.addTab(self.visualizationTab, "")
         self.newTaskTab = QWidget()
         self.newTaskTab.setObjectName(u"newTaskTab")
         self.newTaskTabLayout = QHBoxLayout(self.newTaskTab)
         self.newTaskTabLayout.setObjectName(u"newTaskTabLayout")
         self.tabWidget.addTab(self.newTaskTab, "")
+        self.visualizationTab = QWidget()
+        self.visualizationTab.setObjectName(u"visualizationTab")
+        self.visualizationTabLayout = QHBoxLayout(self.visualizationTab)
+        self.visualizationTabLayout.setObjectName(u"visualizationTabLayout")
+        self.tabWidget.addTab(self.visualizationTab, "")
 
         self.bottomRightPanelLayout.addWidget(self.tabWidget)
 
@@ -198,7 +193,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 1274, 22))
+        self.menubar.setGeometry(QRect(0, 0, 1274, 19))
         self.fileMenu = QMenu(self.menubar)
         self.fileMenu.setObjectName(u"fileMenu")
         MainWindow.setMenuBar(self.menubar)
@@ -214,7 +209,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.tabWidget.setCurrentIndex(2)
+        self.tabWidget.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -229,9 +224,8 @@ class Ui_MainWindow(object):
         self.loadSceneMenuItem.setText(QCoreApplication.translate("MainWindow", u"Load Spatial Objects", None))
         self.saveSceneMenuItem.setText(QCoreApplication.translate("MainWindow", u"Save Spatial Objects", None))
         self.savePreProcessedOverlayMenuItem.setText(QCoreApplication.translate("MainWindow", u"Save Pre-Processed Overlay", None))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.welcomeTab), QCoreApplication.translate("MainWindow", u"Load / Save Data", None))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.visualizationTab), QCoreApplication.translate("MainWindow", u"Advanced Visualization", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.newTaskTab), QCoreApplication.translate("MainWindow", u"New Task", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.visualizationTab), QCoreApplication.translate("MainWindow", u"Advanced Visualization", None))
         self.statusLabel.setText(QCoreApplication.translate("MainWindow", u"Status:", None))
         self.statusViewLogButton.setText(QCoreApplication.translate("MainWindow", u"View Log", None))
         self.fileMenu.setTitle(QCoreApplication.translate("MainWindow", u"File", None))
