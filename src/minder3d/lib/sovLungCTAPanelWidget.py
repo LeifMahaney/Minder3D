@@ -21,15 +21,15 @@ from .ui_sovLungCTAPanelWidget import Ui_LungCTAPanelWidget
 
 
 class LungCTAPanelWidget(QWidget):
-    def __init__(self, gui, state, body_parts, cancer_survival_statistical_data, cardiac_statistcal_data, fracture_statistcal_data, organ_statistcal_data, tasks, parent=None):
+    def __init__(self, gui, state, body_parts, cancer_survival_statistical_data, cardiac_statistical_data, fracture_statistical_data, organ_statistical_data, tasks, parent=None):
         super().__init__(parent)
         self.gui = gui
         self.state = state
         self.body_parts = body_parts
         self.cancer_survival_statistcal_data = cancer_survival_statistical_data
-        self.cardiac_statistcal_data = cardiac_statistcal_data
-        self.fracture_statistcal_data = fracture_statistcal_data
-        self.organ_statistcal_data = organ_statistcal_data
+        self.cardiac_statistical_data = cardiac_statistical_data
+        self.fracture_statistical_data = fracture_statistical_data
+        self.organ_statistical_data = organ_statistical_data
         self.tasks = tasks
         self.logic = LungCTALogic()
         self.setWindowTitle("Tool for Segmentation")
@@ -44,47 +44,74 @@ class LungCTAPanelWidget(QWidget):
             file_path, _ = QFileDialog.getSaveFileName(self, 'Save calculation as', '', 'Text Files (*.txt);;All Files (*)', options=options)
             if not file_path:
                 QMessageBox.warning(self, 'No file selected', 'Please select a file you would like to use')
-            
+                return
+    
             statistics = []
             category = self.selected_category
             body_part = self.body_part_combobox.currentText()
             target_statistic = self.target_body_part_combobox.currentText()
             self.calculate_button.setVisible(True)
             
-            if self.selected_category == 'Cancer Survival' and body_part == 'Psoas muscle at L3':
-                if target_statistic == "Volume":
-                    volume_left = self.logic.calculate_volume(self.seg_image, 88)
-                    volume_right = self.logic.calculate_volume(self.seg_image, 89)
-                    statistics.append(f'Volume of iliopsoas Left: {volume_left:.2f}')
-                    statistics.append(f'Volume of iliopsoas Right: {volume_right:.2f}')
-                elif target_statistic == "Two Volumes":
-                    volume1, volume2 = self.logic.calculate_two_volumes(self.seg_image, 88, 89)
-                    statistics.append(self, 'Volume Calculations', f'Volumes: {volume1: .2f} and {volume2: .2f}')
+            if self.selected_category == 'Cancer Survival':
+                if body_part == 'Psoas muscle at L3':
+                    if target_statistic == "Volume":
+                        volume_left = self.logic.calculate_volume(self.seg_image, 88)
+                        volume_right = self.logic.calculate_volume(self.seg_image, 89)
+                        statistics.append(f'Volume of iliopsoas Left: {volume_left:.2f}')
+                        statistics.append(f'Volume of iliopsoas Right: {volume_right:.2f}')
+                    elif target_statistic == "Two Volumes":
+                        volume1, volume2 = self.logic.calculate_two_volumes(self.seg_image, 88, 89)
+                        statistics.append(f'Volumes: {volume1: .2f} and {volume2: .2f}')  
+                elif body_part == 'Visceral vs. subcutaneous':
+                    if target_statistic == 'Volume':
+                        volume_visceral = self.logic.calculate_volume(self.seg_image, 'visceral_fat')
+                        volume_subcutaneous = self.logic.calculate_volume(self.seg_image, 'subcutaneous_fat')
+                        statistics.append(f'Volume of visceral Fat: {volume_visceral:.2f}')
+                        statistics.append(f'Volume of subcutaneous Fat: {volume_subcutaneous:.2f}')
+                    elif target_statistic == 'Two Volumes':
+                        volume1, volume2 = self.logic.calculate_two_volumes(self.seg_image, 'visceral_fat', 'subcutaneous_fat')
+                        statistics.append(f'Volumes: {volume1:.2f} and {volume2:.2f}')
             if self.selected_category == 'Cardiac':
-                if target_statistic == "Two Volumes":
-                    volume1, volume2 = self.logic.calculate_two_volumes(self.seg_image, 'visceral_fat', 'subcutaneous_fat')
-                    statistics.append(self, 'Volume Calculations', f'Volumes: {volume1: .2f} and {volume2: .2f}')
-                elif target_statistic == "Agaston or Equivalent Calcium Score":
+                if body_part == 'Calcium Score':
                     calcium_score = self.logic.calculate_calcium_score(self.seg_image)
-                    statistics.append(self, 'Calcium Score', f'Calcium Score: {calcium_score: .2f}')
+                    statistics.append(f'Calcium Score: {calcium_score:.2f}')
+                elif body_part == 'Visceral vs. subcutaneous': 
+                    if target_statistic == "Two Volumes":
+                        volume1, volume2 = self.logic.calculate_two_volumes(self.seg_image, 'visceral_fat', 'subcutaneous_fat')
+                        statistics.append(f'Volumes: {volume1: .2f} and {volume2: .2f}')
+                    elif target_statistic == "Agaston or Equivalent Calcium Score":
+                        calcium_score = self.logic.calculate_calcium_score(self.seg_image)
+                        statistics.append(self, 'Calcium Score', f'Calcium Score: {calcium_score: .2f}')
             if self.selected_category == 'Fracture':
-                if target_statistic == 'Bone Mineral Density':
-                    bmd, texture_features = self.logic.calculate_bmd(self.seg_image, body_part)
-                    statistics.append(f'Bone Mineral Density of {body_part} is: {bmd: .2f}')
-                elif target_statistic == 'Texture Analysis':
-                    texture_features = self.logic.calculate_texture_analysis(self.seg_image)
-                    statistics.append(self, 'Texture Analysis', f'Texture Analysis: {texture_features}')
+                if body_part == 'target bone':
+                    if target_statistic == 'Bone Mineral Density':
+                        bmd, texture_features = self.logic.calculate_bmd(self.seg_image, body_part)
+                        statistics.append(f'Bone Mineral Density of {body_part} is: {bmd: .2f}')
+                    elif target_statistic == 'Texture Analysis':
+                        texture_features = self.logic.calculate_texture_analysis(self.seg_image)
+                        statistics.append(self, 'Texture Analysis', f'Texture Analysis: {texture_features}')
             if self.selected_category == 'Organ':
                 if target_statistic == "Volume":
                     volume = self.logic.calculate_volume(self.seg_image, body_parts)
-                    statistics.append(self, 'Volume Calculation', f'volume: {volume:.2f}')
+                    statistics.append(f'volume: {volume:.2f}')
                 elif target_statistic == 'Texture Analysis':
                     texture_features = self.logic.calculate_texture_analysis(self.seg_image)
-                    statistics.append(self, 'Texture Analysis', f'Texture Analysis: {texture_features}')
+                    statistics.append(f'Texture Analysis: {texture_features}')
+            
+            message = '\n'.join(statistics)
+            msg_box = QMessageBox()
+            msg_box.setIcon(QMessageBox.Information)
+            msg_box.setText(message)
+            msg_box.setWindowTitle("Statistics Calculation")
+            msg_box.setStandardButtons(QMessageBox.Save | QMessageBox.Close)
+            result = msg_box.exec_()
 
-            with open(file_path, 'w') as file:
-                for calculation in statistics:
-                    file.write(calculation + '/n')
+            if result == QMessageBox.Save:
+                file_path, _ = QFileDialog.getSaveFileName(self, 'Save calculation as', '', 'Text Files (*.txt);;All Files (*)')
+                if file_path:            
+                    with open(file_path, 'w') as file:
+                        for calculation in statistics:
+                            file.write(calculation + '\n')
 
             QMessageBox.information(self, 'Calculations have been saved', f'Calulations have been saved to {file_path}')
 
@@ -156,11 +183,11 @@ class LungCTAPanelWidget(QWidget):
         if self.selected_category == 'Cancer Survival':
             self.target_body_part_combobox.addItems(self.cancer_survival_statistcal_data)
         elif self.selected_category == 'Cardiac':
-            self.target_body_part_combobox.addItems(self.cardiac_statistcal_data)
+            self.target_body_part_combobox.addItems(self.cardiac_statistical_data)
         elif self.selected_category == 'Fracture':
-            self.target_body_part_combobox.addItems(self.fracture_statistcal_data)
+            self.target_body_part_combobox.addItems(self.fracture_statistical_data)
         elif self.selected_category == 'Organ':
-            self.target_body_part_combobox.addItems(self.organ_statistcal_data)
+            self.target_body_part_combobox.addItems(self.organ_statistical_data)
         self.target_body_part_combobox.setVisible(True)
         self.calculate_button.setVisible(True)
 
@@ -223,7 +250,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Segmentation Tool")
-        self.setCentralWidget(LungCTAPanelWidget(gui = None, state = None, body_parts = body_parts, cancer_survival_statistical_data = cancer_survival_statistical_data, cardiac_statistcal_data =cardiac_statistical_data, fracture_statistcal_data = fracture_statistical_data, organ_statistcal_data = organ_statistical_data))
+        self.setCentralWidget(LungCTAPanelWidget(gui = None, state = None, body_parts = body_parts, cancer_survival_statistical_data = cancer_survival_statistical_data, cardiac_statistical_data =cardiac_statistical_data, fracture_statistical_data = fracture_statistical_data, organ_statistical_data = organ_statistical_data))
 
 if __name__ == "__main__":
 

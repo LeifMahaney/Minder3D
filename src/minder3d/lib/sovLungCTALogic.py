@@ -144,40 +144,85 @@ class LungCTALogic:
         num_voxels = np.sum(array == label)
         return num_voxels >= min_voxels
     
-    # Calculates the volume by multiplying the number of voxels by the voxel volume
-    def calculate_volume(self, segmented_image, label_name,):
+    def calculate_volume(self, segmented_image, label_name):
         label = label_mapping[label_name]
         l3_label = label_mapping[29]
-        
-        l3_array = itk.GetArrayFromImage(segmented_image) == l3_label
-        psoas_array = itk.GetArrayFromImage(segmented_image) == label
-        sufficient_slices = np.sum(l3_array, axis=(1,2)) >= 5
+
+    # Convert ITK image to NumPy array once
+        image_array = itk.GetArrayFromImage(segmented_image)
+        l3_array = image_array == l3_label
+        psoas_array = image_array == label
+
+    # Debug: Print shapes and sums of arrays
+        print(f"l3_array shape: {l3_array.shape}, sum: {np.sum(l3_array)}")
+        print(f"psoas_array shape: {psoas_array.shape}, sum: {np.sum(psoas_array)}")
+
+    # Identify sufficient slices based on z-axis (0-th dimension)
+        sufficient_slices = np.sum(l3_array, axis=(1, 2)) >= 5
+        print(f"sufficient_slices shape: {sufficient_slices.shape}, sum: {np.sum(sufficient_slices)}")
+
+    # Apply mask to select sufficient slices
         psoas_array = psoas_array[sufficient_slices]
+        print(f"psoas_array after slicing shape: {psoas_array.shape}, sum: {np.sum(psoas_array)}")
 
         voxel_volume = self.get_voxel_volume()
         num_voxels = np.sum(psoas_array)
-        volume = num_voxels * voxel_volume 
+        volume = num_voxels * voxel_volume
+
+    # Debug: Print final volume calculation
+        print(f"num_voxels: {num_voxels}, voxel_volume: {voxel_volume}, volume: {volume}")
+
         return volume
+
     
-    # This does the same thing as calculate_volume however it calculates two volumes using two different regions and multiplying them both by the same voxel_volume
     def calculate_two_volumes(self, segmented_image, label_name1, label_name2):
         label1 = label_mapping[label_name1]
         label2 = label_mapping[label_name2]
         l3_label = label_mapping[29]
 
-        l3_array = itk.GetArrayFromImage(segmented_image) == l3_label
-        region1_array = itk.GetArrayFromImage(segmented_image) == label1 
-        region2_array = itk.GetArrayFromImage(segmented_image) == label2
-        sufficient_slices = np.sum(l3_array, axis=(1,2)) >= 5
+    # Debug: Check if labels are correctly mapped
+        print(f"Label 1: {label1}, Label 2: {label2}, L3 Label: {l3_label}")
+
+    # Convert ITK image to NumPy array once
+        image_array = itk.GetArrayFromImage(segmented_image)
+        l3_array = image_array == l3_label
+        region1_array = image_array == label1
+        region2_array = image_array == label2
+
+    # Debug: Check the shapes and sum of arrays before slicing
+        print(f"L3 array shape: {l3_array.shape}, sum: {np.sum(l3_array)}")
+        print(f"Region 1 array shape: {region1_array.shape}, sum: {np.sum(region1_array)}")
+        print(f"Region 2 array shape: {region2_array.shape}, sum: {np.sum(region2_array)}")
+
+    # Identify sufficient slices based on z-axis (0-th dimension)
+        sufficient_slices = np.sum(l3_array, axis=(1, 2)) >= 5
+        print(f"Sufficient slices: {sufficient_slices.shape}, sum: {np.sum(sufficient_slices)}")
+
+    # Apply mask to select sufficient slices
         region1_array = region1_array[sufficient_slices]
         region2_array = region2_array[sufficient_slices]
+
+    # Debug: Check the shapes and sum of arrays after slicing
+        print(f"Region 1 array after slicing shape: {region1_array.shape}, sum: {np.sum(region1_array)}")
+        print(f"Region 2 array after slicing shape: {region2_array.shape}, sum: {np.sum(region2_array)}")
 
         voxel_volume = self.get_voxel_volume()
         num_voxels1 = np.sum(region1_array)
         num_voxels2 = np.sum(region2_array)
+
+    # Debug: Check the number of voxels calculated
+        print(f"Number of voxels in region 1: {num_voxels1}")
+        print(f"Number of voxels in region 2: {num_voxels2}")
+
         volume1 = num_voxels1 * voxel_volume
         volume2 = num_voxels2 * voxel_volume
+
+    # Debug: Check the volumes calculated
+        print(f"Volume 1: {volume1}")
+        print(f"Volume 2: {volume2}")
+
         return volume1, volume2
+
 
     # Seperates the image into two regions based on specific parameters which include 
     def split_into_two_regions(self, segmented_image, label1, label2):
